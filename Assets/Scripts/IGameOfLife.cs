@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IGameOfLife
 {
-    public void Process(ref HashSet<(int x, int y)> Cells);
+    public void Process(HashSet<(int x, int y)> Cells);
     public void Process(ref bool[] Cells);
     public void Init(MonoBehaviour parent);
 }

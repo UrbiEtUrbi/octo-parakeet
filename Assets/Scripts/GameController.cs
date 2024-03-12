@@ -55,6 +55,8 @@ public class GameController : MonoBehaviour
 
     Stopwatch Stopwatch;
 
+    IGameOfLife GameOfLife;
+
     private void Start()
     {
         Stopwatch = new();
@@ -68,8 +70,14 @@ public class GameController : MonoBehaviour
         Image.texture = Tex;
         
         Cells = new();
+        GameOfLife = new VectorJobless();
 
-        
+        if (GameOfLife is VectorJobless)
+        {
+            (GameOfLife as VectorJobless).Tex = Tex;
+        }
+
+        GameOfLife.Init(this);
 
         //for (int i = -Tex.width/2; i < Tex.width/2; i++)
         //{
@@ -156,6 +164,7 @@ public class GameController : MonoBehaviour
                     continue;
                 }
                 tmp[count] = (i, j);
+                count++;
             }
         }
         return tmp;
@@ -234,6 +243,9 @@ public class GameController : MonoBehaviour
     public void Process()
     {
 
+        GameOfLife.Process(Cells);
+        return;
+
         var jobArray = new CheckAlive();
 
         ToCheckNative = new NativeParallelHashSet<(int x, int y)>(Cells.Count*8, Allocator.TempJob);
@@ -306,7 +318,7 @@ public class GameController : MonoBehaviour
         Tex.SetPixels(Colors);
         Tex.Apply();
         Stopwatch.Stop();
-        Debug.Log($"texture {Stopwatch.Elapsed}");
+      
     }
 
 
